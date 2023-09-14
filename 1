@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crossword Game</title>
+    <style>
+        /* Add your CSS styling here */
+    </style>
+</head>
+<body>
+    <h1>Crossword Game</h1>
+    <div id="timer">Time: <span id="time-left">30</span> seconds</div>
+    <div id="question">Question: Who is a common male name?</div>
+    <input type="text" id="answer" placeholder="Your answer">
+    <button id="submit">Submit</button>
+    <div id="crossword"></div>
+
+    <script>
+        // Define your crossword data
+        const crosswordData = [
+            ["J", null, null, null, null],
+            [null, "o", null, null, null],
+            [null, null, "h", null, null],
+            [null, null, null, "n", null],
+            [null, null, null, null, null]
+        ];
+
+        // Define your questions and answers
+        const questions = [
+            { question: "Who is a common male name?", answer: "John" },
+            // Add more questions and answers here
+        ];
+
+        // Initialize game variables
+        let currentQuestionIndex = 0;
+        let timeLeft = 30;
+
+        // Function to update the crossword display
+        function updateCrossword() {
+            const crosswordElement = document.getElementById("crossword");
+            crosswordElement.innerHTML = crosswordData
+                .map(row => row.map(cell => cell ? cell : "_").join(" "))
+                .join("<br>");
+        }
+
+        // Function to start the timer
+        function startTimer() {
+            const timerElement = document.getElementById("time-left");
+            const timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    // Handle timer expiration (display next question or end game)
+                }
+            }, 1000);
+        }
+
+        // Function to handle submitting answers
+        function submitAnswer() {
+            const answer = document.getElementById("answer").value;
+            const currentQuestion = questions[currentQuestionIndex];
+
+            if (answer.toLowerCase() === currentQuestion.answer.toLowerCase()) {
+                // Correct answer, move to the next question
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    // Display the next question
+                    const questionElement = document.getElementById("question");
+                    questionElement.textContent = `Question: ${questions[currentQuestionIndex].question}`;
+                    // Reset the timer
+                    timeLeft = 30;
+                } else {
+                    // All questions answered, end the game
+                    alert("Congratulations! You completed the crossword.");
+                }
+            } else {
+                // Incorrect answer, you can handle this as per your game's rules
+                alert("Incorrect answer. Try again or add your custom logic.");
+            }
+            // Clear the input field
+            document.getElementById("answer").value = "";
+
+            // Update the crossword display
+            updateCrossword();
+        }
+
+        // Initialize the game
+        updateCrossword();
+        startTimer();
+
+        // Add a click event handler to the submit button
+        document.getElementById("submit").addEventListener("click", submitAnswer);
+    </script>
+</body>
+</html>
